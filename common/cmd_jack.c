@@ -34,6 +34,18 @@ int do_jack(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[]){
   if(rcode)
 	  return rcode;
 
+  sprintf(buf, "setenv mmcroot \"/dev/mmcblk0p%c rw\"\0", argv[1][0]);
+
+  #ifndef CONFIG_SYS_HUSH_PARSER
+	  if (run_command(buf, flag) < 0)
+		  rcode = 1;
+  #else
+	  if (parse_string_outer(buf,
+	    FLAG_PARSE_SEMICOLON | FLAG_EXIT_FROM_LOOP) != 0)
+		  rcode = 1;
+  #endif
+  if(rcode)
+	  return rcode;
 
 
 
